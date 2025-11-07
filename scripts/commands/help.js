@@ -3,7 +3,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 module.exports = {
     config: {
         name: "help",
-        version: "1.21",
+        version: "1.22",
         author: "Samir",
         countDown: 5,
         role: 0,
@@ -246,7 +246,7 @@ module.exports = {
                         new ButtonBuilder()
                             .setLabel('GitHub')
                             .setStyle(ButtonStyle.Link)
-                            .setURL('https://github.com/notsopreety')
+                            .setURL('https://github.com/notsopreety/Rento-Bot')
                             .setEmoji('💻'),
                         new ButtonBuilder()
                             .setLabel('Author')
@@ -303,7 +303,7 @@ module.exports = {
                         new ButtonBuilder()
                             .setLabel('GitHub')
                             .setStyle(ButtonStyle.Link)
-                            .setURL('https://github.com/notsopreety')
+                            .setURL('https://github.com/notsopreety/Rento-Bot')
                             .setEmoji('💻'),
                         new ButtonBuilder()
                             .setLabel('Author')
@@ -396,7 +396,7 @@ module.exports = {
                     new ButtonBuilder()
                         .setLabel('GitHub')
                         .setStyle(ButtonStyle.Link)
-                        .setURL('https://github.com/notsopreety')
+                        .setURL('https://github.com/notsopreety/Rento-Bot')
                         .setEmoji('💻'),
                     new ButtonBuilder()
                         .setLabel('Author')
@@ -511,7 +511,7 @@ module.exports = {
                 new ButtonBuilder()
                     .setLabel('GitHub')
                     .setStyle(ButtonStyle.Link)
-                    .setURL('https://github.com/notsopreety')
+                    .setURL('https://github.com/notsopreety/Rento-Bot')
                     .setEmoji('💻'),
                 new ButtonBuilder()
                     .setLabel('Author')
