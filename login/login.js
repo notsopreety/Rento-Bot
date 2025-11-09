@@ -476,10 +476,89 @@ async function startDashboard(client, config) {
     }
 }
 
+async function checkForUpdatesOnStartup() {
+    const log = require('../logger/log.js');
+    const axios = require('axios');
+    const { colors } = require('../func/colors.js');
+    
+    try {
+        console.log(gradient("#A8E6CF", "#FFD3B6")(createLine("VERSION CHECK", true)));
+        console.log();
+        
+        const checkSpinner = ora({
+            text: gradient.mind('Checking for updates...'),
+            spinner: 'dots12'
+        }).start();
+        
+        // Get current version
+        const packageJson = require('../package.json');
+        const currentVersion = packageJson.version;
+        
+        // Get latest version from GitHub
+        const { data: latestPackageJson } = await axios.get('https://raw.githubusercontent.com/notsopreety/Rento-Bot/main/package.json', {
+            timeout: 10000
+        });
+        const latestVersion = latestPackageJson.version;
+        
+        // Compare versions
+        function compareVersion(v1, v2) {
+            const parts1 = v1.split('.').map(Number);
+            const parts2 = v2.split('.').map(Number);
+            
+            for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+                const part1 = parts1[i] || 0;
+                const part2 = parts2[i] || 0;
+                
+                if (part1 > part2) return 1;
+                if (part1 < part2) return -1;
+            }
+            
+            return 0;
+        }
+        
+        const comparison = compareVersion(latestVersion, currentVersion);
+        
+        checkSpinner.stop();
+        
+        if (comparison > 0) {
+            // Update available
+            console.log(gradient("#FFE66D", "#FF6B6B")(`⚠️  Update Available!`));
+            console.log(`${colors.yellow}   Current Version: ${currentVersion}${colors.reset}`);
+            console.log(`${colors.green}   Latest Version:  ${latestVersion}${colors.reset}`);
+            console.log(`${colors.cyan}   Use !update command to update the bot${colors.reset}`);
+            console.log();
+            log.warn("UPDATE", `Update available! Current: ${currentVersion}, Latest: ${latestVersion}`);
+        } else if (comparison < 0) {
+            // Current version is newer (shouldn't happen, but handle it)
+            console.log(gradient("#06FFA5", "#09FBD3")(`✓ You are on a development version`));
+            console.log(`${colors.yellow}  Version: ${currentVersion}${colors.reset}`);
+            console.log(`${colors.green}  Latest stable: ${latestVersion}${colors.reset}`);
+            console.log();
+            log.info("UPDATE", `Development version detected: ${currentVersion}`);
+        } else {
+            // Up to date
+            console.log(gradient("#06FFA5", "#09FBD3")(`✓ You are on the latest version`));
+            console.log(`${colors.green}  Version: ${currentVersion}${colors.reset}`);
+            console.log();
+            log.success("UPDATE", `Bot is up to date: ${currentVersion}`);
+        }
+        
+        console.log(gradient("#A8E6CF", "#FFD3B6")(createLine(null, true)));
+        console.log();
+        
+    } catch (error) {
+        // Don't fail startup if update check fails
+        console.log(gradient("#FFE66D", "#FF6B6B")(`⚠️  Could not check for updates: ${error.message}`));
+        console.log();
+        log.warn("UPDATE", `Failed to check for updates: ${error.message}`);
+    }
+}
+
 async function login(client, config) {
     try {
         displayBanner();
         
+        await checkForUpdatesOnStartup();
         await checkPackages();
         await loadDatabase();
         await loadCommands(client);

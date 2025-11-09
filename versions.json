@@ -1,0 +1,19 @@
+[
+    {
+        "version": "1.0.3",
+        "files": {
+            "updater.js": "Added main updater script with version checking, file updates, and automatic backups",
+            "update.js": "Added script runner for direct execution of updater",
+            "scripts/commands/update.js": "Added Discord command for updating bot via !update command with interactive buttons",
+            "versions.json": "Updated structure to support file tracking per version with config merging and file deletion",
+            "login/login.js": "Added startup version check to notify users if update is available",
+            "UPDATER_README.md": "Added comprehensive documentation for the update system",
+            "UPDATE_SYSTEM_SUMMARY.md": "Added implementation summary and usage guide",
+            ".gitignore": "Added backups/backup_*/ pattern to ignore backup folders",
+            ".gitkeep": "Added gitkeep file to backups directory",
+            "package.json": "Updated version to 1.0.3"
+        },
+        "deleteFiles": {},
+        "reinstallDependencies": false
+    }
+]
