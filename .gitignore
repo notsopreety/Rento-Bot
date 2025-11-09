@@ -7,4 +7,5 @@ tmp/
 temp/
 *.tmp
 package-lock.json
+config.json
 backups/backup_*/
