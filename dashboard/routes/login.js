@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD_HASH = bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10);
+const ADMIN_USERNAME = global.RentoBot.config.dashboard.username || 'admin';
+const ADMIN_PASSWORD_HASH = bcrypt.hashSync(global.RentoBot.config.dashboard.password || 'admin123', 10);
 
 router.get('/', (req, res) => {
     if (req.session.isAuthenticated) {
