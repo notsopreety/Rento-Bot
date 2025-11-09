@@ -165,13 +165,29 @@ module.exports = async function (guildModel) {
             }
 
             if (!guildData.adminIDs || guildData.adminIDs.length === 0 || (guildData.adminIDs.length === 1 && guildData.adminIDs[0] === discordGuild.ownerId)) {
-                const { PermissionFlagsBits } = require('discord.js');
+                const { PermissionFlagsBits, GatewayIntentBits } = require('discord.js');
                 const adminIDs = new Set();
                 
                 adminIDs.add(discordGuild.ownerId);
                 
                 try {
-                    const members = await discordGuild.members.fetch().catch(() => null);
+                    // Try to fetch members with timeout
+                    let members = null;
+                    let fetchFailed = false;
+                    
+                    try {
+                        members = await discordGuild.members.fetch({ 
+                            limit: 1000,
+                            timeout: 5000 
+                        });
+                    } catch (fetchError) {
+                        fetchFailed = true;
+                        // Check if we have cached members as fallback
+                        if (discordGuild.members.cache.size > 0) {
+                            members = discordGuild.members.cache;
+                        }
+                    }
+                    
                     if (members && members.size > 0) {
                         members.forEach(member => {
                             if (!member.user.bot && member.permissions.has(PermissionFlagsBits.Administrator)) {
@@ -180,11 +196,22 @@ module.exports = async function (guildModel) {
                         });
                         
                         await set(guildID, { adminIDs: Array.from(adminIDs) });
-                    } else if (adminIDs.size === 1) {
-                        console.log(`Could not fetch members for guild ${discordGuild.name} (${guildID}). Retrying later...`);
+                    } else if (fetchFailed) {
+                        // Only log if fetch actually failed and we have no cached members
+                        // Check if bot has proper intents
+                        const hasGuildMembersIntent = client.options.intents.has(GatewayIntentBits.GuildMembers);
+                        if (!hasGuildMembersIntent) {
+                            console.warn(`[GUILD INFO] Could not fetch members for guild ${discordGuild.name} (${guildID}): Missing GUILD_MEMBERS intent. Enable it in Discord Developer Portal.`);
+                        } else {
+                            console.warn(`[GUILD INFO] Could not fetch members for guild ${discordGuild.name} (${guildID}). Using owner only. This may be due to rate limits or missing permissions.`);
+                        }
+                        // Save with owner only for now
+                        await set(guildID, { adminIDs: Array.from(adminIDs) });
                     }
                 } catch (err) {
-                    console.error(`Failed to detect admin members for guild ${guildID}:`, err);
+                    console.error(`[GUILD INFO] Failed to detect admin members for guild ${guildID}:`, err.message);
+                    // Save with owner only as fallback
+                    await set(guildID, { adminIDs: Array.from(adminIDs) });
                 }
             }
 
