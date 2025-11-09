@@ -1,5 +1,16 @@
 [
     {
+        "version": "1.0.5",
+        "files": {
+            "scripts/commands/guessflag.js": "Added guessflag command",
+            "scripts/commands/meme.js": "Added meme command",
+            "database/controller/guildsData.js": "Updated guildsData.js to handle guilds admin data",
+            "package.json": "Updated version to 1.0.5"
+        },
+        "deleteFiles": {},
+        "reinstallDependencies": false
+    },
+    {
         "version": "1.0.4",
         "files": {
             "login/login.js": "Updated login.js by removing unused code and optimizing imports with better auto dependencies installation",
