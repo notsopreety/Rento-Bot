@@ -1,6 +1,6 @@
 {
   "name": "rento-bot",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A powerful Discord bot with modular structure like Goat-Bot-V2",
   "main": "index.js",
   "scripts": {
