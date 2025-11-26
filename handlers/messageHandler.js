@@ -84,7 +84,7 @@ module.exports = (client) => {
         }
 
         let userData = await db.usersData.get(userID);
-        
+
         const prefix = utils.getPrefix(guildID);
 
         // Only update guild info for actual guild messages (not DMs)
@@ -95,14 +95,14 @@ module.exports = (client) => {
         }
 
         if (guildData.banned.status) return;
-        
+
         // Allow banned users to only use appeal command
         if (userData.banned.status) {
             if (!message.content.startsWith(prefix)) return;
-            
+
             const args = message.content.slice(prefix.length).trim().split(/ +/);
             const commandName = args.shift().toLowerCase();
-            
+
             if (commandName !== 'appeal' && !['unban-request', 'appealban'].includes(commandName)) {
                 return message.reply("❌ You are banned from using this bot. Use `" + prefix + "appeal <reason>` to appeal your ban.");
             }
@@ -151,7 +151,7 @@ module.exports = (client) => {
                 } catch (error) {
                     log.error("ONCHAT", `Error in onChat handler for ${commandName}: ${error.message}`);
                     console.error(error);
-                    
+
                     errorNotifier.notifyError(error, {
                         location: `onChat Handler: ${commandName}`,
                         command: commandName,
@@ -190,7 +190,7 @@ module.exports = (client) => {
                 } catch (error) {
                     log.error("ONCHAT-EVENT", `Error in onChat handler for event ${eventName}: ${error.message}`);
                     console.error(error);
-                    
+
                     errorNotifier.notifyError(error, {
                         location: `onChat Event Handler: ${eventName}`,
                         command: eventName,
@@ -208,7 +208,7 @@ module.exports = (client) => {
                     // Support both single author and multiple participants
                     const isAuthorized = onReplyHandler.author === userID || 
                                         (onReplyHandler.participants && onReplyHandler.participants.includes(userID));
-                    
+
                     if (isAuthorized) {
                         try {
                             await onReplyHandler.handler({
@@ -232,7 +232,7 @@ module.exports = (client) => {
                         } catch (error) {
                             log.error("ONREPLY", `Error in onReply handler: ${error.message}`);
                             console.error(error);
-                            
+
                             errorNotifier.notifyError(error, {
                                 location: `onReply Handler: ${onReplyHandler.commandName || 'Unknown'}`,
                                 command: onReplyHandler.commandName || 'Unknown',
@@ -246,7 +246,7 @@ module.exports = (client) => {
             const expGain = Math.floor(Math.random() * 15) + 10;
             const currentExp = userData.exp || 0;
             const newExp = currentExp + expGain;
-            
+
             const oldLevel = utils.calculateLevel(currentExp);
             const newLevel = utils.calculateLevel(newExp);
 
@@ -341,12 +341,13 @@ module.exports = (client) => {
                 message,
                 args,
                 client,
-                prefix,
                 usersData: db.usersData,
                 guildsData: db.guildsData,
+                db,
                 guildData,
                 userData,
-                event: message,
+                prefix,
+                role: command.config.role, // Assuming 'role' is intended to be command's role requirement
                 getLang: (key, ...args_) => {
                     const userLang = userData.settings?.language || guildData.settings?.language || 'en';
                     const lang = command.langs?.[userLang]?.[key] || command.langs?.['en']?.[key] || key;
@@ -359,7 +360,7 @@ module.exports = (client) => {
             log.error("COMMAND", `Error executing ${commandName}: ${error.message}`);
             message.reply(`❌ An error occurred while executing this command.`);
             console.error(error);
-            
+
             errorNotifier.notifyError(error, {
                 location: `Command: ${commandName}`,
                 command: commandName,

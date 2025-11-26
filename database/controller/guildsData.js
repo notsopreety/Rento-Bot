@@ -81,7 +81,8 @@ module.exports = async function (guildModel) {
                 leaveChannel: null,
                 leaveEnabled: false,
                 levelUpChannel: null,
-                levelUpEnabled: false
+                levelUpEnabled: false,
+                nsfwEnabled: false
             },
             data: {
                 aliases: {},

@@ -13,7 +13,8 @@ const guildSchema = new mongoose.Schema({
             leaveChannel: null,
             leaveEnabled: false,
             levelUpChannel: null,
-            levelUpEnabled: false
+            levelUpEnabled: false,
+            nsfwEnabled: false
         }
     },
     data: {
