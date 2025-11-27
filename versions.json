@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.0.9",
+        "files": {
+            "scripts/commands/tictactoe.js": "Update Tic Tac Toe symbols to use ❌ and ⭕ for player representation",
+            "package.json": "v1.0.9"
+        },
+        "deleteFiles": {},
+        "reinstallDependencies": false
+    },
+    {
         "version": "1.0.8",
         "files":{
             "scripts/commands/help.js": "Fix user ID retrieval in help command for better compatibility with message events",
