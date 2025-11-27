@@ -34,7 +34,7 @@ module.exports = {
             noMention: "❌ Please mention a user to play with!",
             cantPlaySelf: "❌ You can't play with yourself! Find a worthy opponent!",
             cantPlayBot: "❌ You can't play with bots! Challenge a real player!",
-            gameStarted: "⚔️ **EPIC TIC TAC TOE BATTLE** ⚔️\n\n**{player1}** 🔴 vs **{player2}** 🔵\n\n{player1}, you're up first! Make your move!",
+            gameStarted: "⚔️ **EPIC TIC TAC TOE BATTLE** ⚔️\n\n**{player1}** ❌ vs **{player2}** ⭕\n\n{player1}, you're up first! Make your move!",
             yourTurn: "**{player}'s Turn** {symbol}",
             invalidMove: "❌ Invalid move! Please choose a number between 1-9 that's available on the board.",
             positionTaken: "⚠️ That position is already taken! Choose an empty spot.",
@@ -48,7 +48,7 @@ module.exports = {
             noMention: "❌ कृपया खेल्नको लागि प्रयोगकर्तालाई उल्लेख गर्नुहोस्!",
             cantPlaySelf: "❌ तपाईं आफैसँग खेल्न सक्नुहुन्न! योग्य प्रतिद्वन्द्वी खोज्नुहोस्!",
             cantPlayBot: "❌ तपाईं बटसँग खेल्न सक्नुहुन्न! वास्तविक खेलाडीलाई चुनौती दिनुहोस्!",
-            gameStarted: "⚔️ **महाकाव्य टिक ट्याक टो युद्ध** ⚔️\n\n**{player1}** 🔴 बनाम **{player2}** 🔵\n\n{player1}, तपाईं पहिले हुनुहुन्छ! आफ्नो चाल बनाउनुहोस्!",
+            gameStarted: "⚔️ **महाकाव्य टिक ट्याक टो युद्ध** ⚔️\n\n**{player1}** ❌ बनाम **{player2}** ⭕\n\n{player1}, तपाईं पहिले हुनुहुन्छ! आफ्नो चाल बनाउनुहोस्!",
             yourTurn: "**{player} को पालो** {symbol}",
             invalidMove: "❌ अवैध चाल! कृपया बोर्डमा उपलब्ध 1-9 बीचको संख्या छान्नुहोस्।",
             positionTaken: "⚠️ त्यो स्थान पहिले नै लिइसकेको छ! खाली स्थान छान्नुहोस्।",
@@ -93,8 +93,8 @@ module.exports = {
         const board = Array(9).fill(null);
         const gameState = {
             board,
-            player1: { id: player1.id, username: player1.username, symbol: '🔴', displaySymbol: 'X' },
-            player2: { id: player2.id, username: player2.username, symbol: '🔵', displaySymbol: 'O' },
+            player1: { id: player1.id, username: player1.username, symbol: '❌', displaySymbol: 'X' },
+            player2: { id: player2.id, username: player2.username, symbol: '⭕', displaySymbol: 'O' },
             currentPlayer: player1.id,
             moveCount: 0,
             moveHistory: [],
@@ -111,8 +111,8 @@ module.exports = {
             .setDescription(`${description}\n\n${boardDisplay}`)
             .setColor(0xFF6B6B)
             .addFields(
-                { name: '🔴 Player 1', value: `${player1.username}\n**Symbol:** X`, inline: true },
-                { name: '🔵 Player 2', value: `${player2.username}\n**Symbol:** O`, inline: true },
+                { name: '❌ Player 1', value: `${player1.username}\n**Symbol:** X`, inline: true },
+                { name: '⭕ Player 2', value: `${player2.username}\n**Symbol:** O`, inline: true },
                 { name: '📊 Game Stats', value: `**Moves:** 0/9\n**Current Turn:** ${player1.username}`, inline: true }
             )
             .setFooter({ text: "Reply with a number (1-9) to make your move • Game will timeout in 5 minutes" })
@@ -342,8 +342,8 @@ function createGameHandler(gameState, getLang, botMessage) {
             .setDescription(`${turnMessage}\n\n${boardDisplay}`)
             .setColor(gameState.currentPlayer === gameState.player1.id ? 0xFF6B6B : 0x4A90E2)
             .addFields(
-                { name: '🔴 Player 1', value: `${gameState.player1.username}\n**Symbol:** X`, inline: true },
-                { name: '🔵 Player 2', value: `${gameState.player2.username}\n**Symbol:** O`, inline: true },
+                { name: '❌ Player 1', value: `${gameState.player1.username}\n**Symbol:** X`, inline: true },
+                { name: '⭕ Player 2', value: `${gameState.player2.username}\n**Symbol:** O`, inline: true },
                 { name: '📊 Game Stats', value: `**Moves:** ${gameState.moveCount}/9\n⏱️ **Time:** ${currentDuration}`, inline: true }
             )
             .setFooter({ text: `${nextPlayerData.username}, it's your turn! Reply with a number (1-9)` })
