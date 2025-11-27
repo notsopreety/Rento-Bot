@@ -1,5 +1,16 @@
 [
     {
+        "version": "1.0.8",
+        "files":{
+            "scripts/commands/help.js": "Fix user ID retrieval in help command for better compatibility with message events",
+            "scripts/commands/waifu.js": "Refactor waifu command to support SFW and NSFW categories, update API endpoint, and improve error handling",
+            "scripts/commands/wakatime.js": "Add WakaTime command with detailed statistics visualization and error handling",
+            "package.json": "v1.0.8"
+        },
+        "deleteFiles": {},
+        "reinstallDependencies": false
+    },
+    {
         "version": "1.0.7",
         "files": {
             "handlers/commandHandler.js": "Updated commandHandler by adding db key",
