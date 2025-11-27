@@ -138,7 +138,7 @@ module.exports = {
 
     onStart: async function ({ message, interaction, args, usersData, getLang, role, prefix, event }) {
         const isSlash = !!interaction;
-        const userID = isSlash ? interaction.user.id : event.author.id;
+        const userID = isSlash ? interaction.user.id : (event?.author?.id || message?.author?.id);
         const userData = await usersData.get(userID);
         
         let sortHelp = userData.settings?.sortHelp || "name";
