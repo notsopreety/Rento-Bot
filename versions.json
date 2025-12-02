@@ -1,94 +1,90 @@
 [
-    {
-        "version": "1.1.0",
-        "files": {
-            "scripts/commands/hentai.js": "Add hentai command for searching and watching hentai videos from HenAPI",
-            "package.json": "v1.1.0"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+  {
+    "version": "1.1.0",
+    "files": {
+      "scripts/commands/hentai.js": "Add hentai command for searching and watching hentai videos from HenAPI",
+      "package.json": "v1.1.0"
     },
-    {
-        "version": "1.0.9",
-        "files": {
-            "scripts/commands/tictactoe.js": "Update Tic Tac Toe symbols to use ❌ and ⭕ for player representation",
-            "package.json": "v1.0.9"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.9",
+    "files": {
+      "scripts/commands/tictactoe.js": "Update Tic Tac Toe symbols to use ❌ and ⭕ for player representation",
+      "package.json": "v1.0.9"
     },
-    {
-        "version": "1.0.8",
-        "files":{
-            "scripts/commands/help.js": "Fix user ID retrieval in help command for better compatibility with message events",
-            "scripts/commands/waifu.js": "Refactor waifu command to support SFW and NSFW categories, update API endpoint, and improve error handling",
-            "scripts/commands/wakatime.js": "Add WakaTime command with detailed statistics visualization and error handling",
-            "package.json": "v1.0.8"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.8",
+    "files": {
+      "scripts/commands/help.js": "Fix user ID retrieval in help command for better compatibility with message events",
+      "scripts/commands/waifu.js": "Refactor waifu command to support SFW and NSFW categories, update API endpoint, and improve error handling",
+      "scripts/commands/wakatime.js": "Add WakaTime command with detailed statistics visualization and error handling",
+      "package.json": "v1.0.8"
     },
-    {
-        "version": "1.0.7",
-        "files": {
-            "handlers/commandHandler.js": "Updated commandHandler by adding db key",
-            "handlers/messageHandler.js": "Updated messageHandler by adding db and role key",
-            "database/models/Guild.js": "Added nsfwEnabled fields to Guild model",
-            "database/controller/guildsData.js": "Updated guildsData.js to handle new guild settings fields",
-            "scripts/commands/nsfw.js": "Added nsfw command to toggle NSFW content settings per guild",
-            "scripts/commands/waifu.js": "Added waifu command to fetch and display waifu images (Including NSFW content if enabled)",
-            "package.json": "Updated version to 1.0.7"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.7",
+    "files": {
+      "handlers/messageHandler.js": "Updated messageHandler by adding db and role key",
+      "database/models/Guild.js": "Added nsfwEnabled fields to Guild model",
+      "database/controller/guildsData.js": "Updated guildsData.js to handle new guild settings fields",
+      "scripts/commands/nsfw.js": "Added nsfw command to toggle NSFW content settings per guild",
+      "scripts/commands/waifu.js": "Added waifu command to fetch and display waifu images (Including NSFW content if enabled)",
+      "package.json": "Updated version to 1.0.7"
     },
-    {
-        "version": "1.0.6",
-        "files": {
-            "config.json": "sorry for the inconvenience, i forgot to add the config.json file to the repository",
-            "package.json": "Updated version to 1.0.6"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.6",
+    "files": {
+      "config.json": "sorry for the inconvenience, i forgot to add the config.json file to the repository",
+      "package.json": "Updated version to 1.0.6"
     },
-    {
-        "version": "1.0.5",
-        "files": {
-            "scripts/commands/guessflag.js": "Added guessflag command",
-            "scripts/commands/meme.js": "Added meme command",
-            "database/controller/guildsData.js": "Updated guildsData.js to handle guilds admin data",
-            "package.json": "Updated version to 1.0.5"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.5",
+    "files": {
+      "scripts/commands/guessflag.js": "Added guessflag command",
+      "scripts/commands/meme.js": "Added meme command",
+      "database/controller/guildsData.js": "Updated guildsData.js to handle guilds admin data",
+      "package.json": "Updated version to 1.0.5"
     },
-    {
-        "version": "1.0.4",
-        "files": {
-            "login/login.js": "Updated login.js by removing unused code and optimizing imports with better auto dependencies installation",
-            "package.json": "Updated version to 1.0.4"
-        },
-        "deleteFiles": {
-            "UPDATER_README.md": "Removed comprehensive documentation for the update system",
-            "UPDATE_SYSTEM_SUMMARY.md": "Removed implementation summary and usage guide"
-        },
-        "reinstallDependencies": false
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.4",
+    "files": {
+      "login/login.js": "Updated login.js by removing unused code and optimizing imports with better auto dependencies installation",
+      "package.json": "Updated version to 1.0.4"
     },
-    {
-        "version": "1.0.3",
-        "files": {
-            "updater.js": "Added main updater script with version checking, file updates, and automatic backups",
-            "update.js": "Added script runner for direct execution of updater",
-            "scripts/commands/update.js": "Added Discord command for updating bot via !update command with interactive buttons",
-            "versions.json": "Updated structure to support file tracking per version with config merging and file deletion",
-            "login/login.js": "Added startup version check to notify users if update is available",
-            "UPDATER_README.md": "Added comprehensive documentation for the update system",
-            "UPDATE_SYSTEM_SUMMARY.md": "Added implementation summary and usage guide",
-            ".gitignore": "Added backups/backup_*/ pattern to ignore backup folders",
-            ".gitkeep": "Added gitkeep file to backups directory",
-            "package.json": "Updated version to 1.0.3"
-        },
-        "deleteFiles": {},
-        "reinstallDependencies": false
-    }
+    "deleteFiles": {
+      "UPDATER_README.md": "Removed comprehensive documentation for the update system",
+      "UPDATE_SYSTEM_SUMMARY.md": "Removed implementation summary and usage guide"
+    },
+    "reinstallDependencies": false
+  },
+  {
+    "version": "1.0.3",
+    "files": {
+      "updater.js": "Added main updater script with version checking, file updates, and automatic backups",
+      "update.js": "Added script runner for direct execution of updater",
+      "scripts/commands/update.js": "Added Discord command for updating bot via !update command with interactive buttons",
+      "versions.json": "Updated structure to support file tracking per version with config merging and file deletion",
+      "login/login.js": "Added startup version check to notify users if update is available",
+      ".gitignore": "Added backups/backup_*/ pattern to ignore backup folders",
+      "package.json": "Updated version to 1.0.3"
+    },
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  }
 ]
