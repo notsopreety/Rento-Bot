@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.1.1",
+    "files": {
+      "scripts/commands/vc.js": "Add voice channel management command with create, delete, join, leave, and list functionalities",
+      "package.json": "v1.1.1"
+    },
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
     "version": "1.1.0",
     "files": {
       "scripts/commands/hentai.js": "Add hentai command for searching and watching hentai videos from HenAPI",

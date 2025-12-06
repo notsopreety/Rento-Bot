@@ -1,6 +1,6 @@
 {
   "name": "rento-bot",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A powerful Discord bot with modular structure like Goat-Bot-V2",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
   "author": "Samir Badaila",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/voice": "^0.19.0",
     "@google/genai": "^1.29.0",
     "axios": "^1.12.2",
     "bcryptjs": "^2.4.3",
