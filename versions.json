@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.1.3",
+    "files": {
+      "logger/errorNotifier.js": "remove useless rate limit from error notifier",
+      "package.json": "v1.1.3"
+    },
+    "deleteFiles": {},
+    "reinstallDependencies": false
+  },
+  {
     "version": "1.1.2",
     "files": {
       "scripts/commands/pair.js": "Updated pair cmd",
