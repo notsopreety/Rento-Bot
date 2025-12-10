@@ -1,201 +1,143 @@
-
-const axios = require('axios');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     config: {
         name: "pair",
         aliases: ["ship", "couple"],
-        version: "2.0",
+        version: "4.0",
         author: "Samir",
         countDown: 5,
         role: 0,
         description: {
-            en: "Pair two random users from the server and see their compatibility",
-            ne: "सर्भरबाट दुई अनियमित प्रयोगकर्ताहरू जोडी बनाउनुहोस् र तिनीहरूको मिलापन हेर्नुहोस्"
+            en: "Pair yourself or a mentioned user with a random user",
+            ne: "आफू वा उल्लेखित प्रयोगकर्तालाई अनियमित प्रयोगकर्तासँग जोडी बनाउनुहोस्"
         },
         category: "fun",
         guide: {
-            en: "{prefix}pair - Randomly pair two users from the server",
-            ne: "{prefix}pair - सर्भरबाट दुई प्रयोगकर्ताहरू अनियमित रूपमा जोडी बनाउनुहोस्"
+            en: "{prefix}pair [@user]",
+            ne: "{prefix}pair [@user]"
         },
-        slash: true
+        slash: true,
+        options: [
+            {
+                name: "user",
+                description: "User you want to pair",
+                type: 6,
+                required: false
+            }
+        ]
     },
 
     langs: {
         en: {
-            loading: "🔮 Finding the perfect match...",
-            error: "❌ Failed to generate ship image. Please try again!",
-            notEnoughUsers: "❌ Not enough users in the server to create a pair!",
-            shipTitle: "💕 Love Calculator 💕",
-            compatibility: "Compatibility: **%1%**",
-            couple: "**%1** 💖 **%2**",
-            fetchError: "❌ Unable to fetch server members. Using cached members..."
+            notEnoughUsers: "❌ Not enough users available to create a pair!",
+            pairTitle: "💕 Perfect Match Found! 💕",
+            compatibility: "Compatibility Score",
+            footer: "Made with 💖 by RentoBot"
         },
         ne: {
-            loading: "🔮 उत्तम मिलान खोज्दै...",
-            error: "❌ जहाज छवि उत्पन्न गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्!",
-            notEnoughUsers: "❌ जोडी बनाउन सर्भरमा पर्याप्त प्रयोगकर्ताहरू छैनन्!",
-            shipTitle: "💕 प्रेम क्याल्कुलेटर 💕",
-            compatibility: "मिलाप: **%1%**",
-            couple: "**%1** 💖 **%2**",
-            fetchError: "❌ सर्भर सदस्यहरू प्राप्त गर्न असमर्थ। क्याश गरिएको सदस्यहरू प्रयोग गर्दै..."
+            notEnoughUsers: "❌ जोडी बनाउन पर्याप्त प्रयोगकर्ताहरू छैनन्!",
+            pairTitle: "💕 उत्तम मिलान भेटियो! 💕",
+            compatibility: "मिलाप स्कोर",
+            footer: "💖 द्वारा बनाइएको RentoBot"
         }
     },
 
-    onStart: async ({ message, interaction, getLang, client }) => {
+    onStart: async ({ message, interaction, getLang }) => {
         const isSlash = !!interaction;
-        let sentMessage;
+        const guild = isSlash ? interaction.guild : message.guild;
+
+        // Get author or user from slash mention
+        const executor =
+            isSlash
+                ? (interaction.options.getUser("user") || interaction.user)
+                : (message.mentions.users.first() || message.author);
 
         try {
-            // Send loading message
-            const loadingMsg = getLang("loading");
-            
-            if (isSlash) {
-                await interaction.reply(loadingMsg);
-            } else {
-                sentMessage = await message.reply(loadingMsg);
+            await guild.members.fetch().catch(() => {});
+
+            // Filter available members
+            const members = guild.members.cache.filter(
+                m => !m.user.bot && m.user.id !== executor.id
+            );
+
+            if (members.size === 0) {
+                const msg = getLang("notEnoughUsers");
+                return isSlash
+                    ? interaction.reply({ content: msg, ephemeral: true })
+                    : message.reply(msg);
             }
 
-            // Get guild
-            const guild = isSlash ? interaction.guild : message.guild;
-            
-            // Try to fetch members with better error handling
-            let useCachedOnly = false;
-            try {
-                await guild.members.fetch({ limit: 1000, timeout: 3000 });
-            } catch (fetchError) {
-                console.log(`[PAIR] Members fetch failed: ${fetchError.message}, using cached members`);
-                useCachedOnly = true;
-            }
-            
-            // Filter out bots and get human users only
-            const members = guild.members.cache.filter(member => !member.user.bot);
-            
-            if (members.size < 2) {
-                const errorMsg = getLang("notEnoughUsers");
-                if (isSlash) {
-                    return await interaction.editReply(errorMsg);
-                } else {
-                    return await sentMessage.edit(errorMsg);
-                }
-            }
+            const randomUser = members.random().user;
 
-            // Get two random members
-            const membersArray = Array.from(members.values());
-            const shuffled = membersArray.sort(() => Math.random() - 0.5);
-            const user1 = shuffled[0].user;
-            const user2 = shuffled[1].user;
-
-            // Get avatar URLs (use png format for better compatibility)
-            const avatar1 = user1.displayAvatarURL({ extension: 'png', size: 256, forceStatic: true });
-            const avatar2 = user2.displayAvatarURL({ extension: 'png', size: 256, forceStatic: true });
-
-            // Calculate compatibility percentage (deterministic based on user IDs for consistency)
-            const combined = user1.id + user2.id;
+            // Deterministic compatibility
+            const seed = executor.id + randomUser.id;
             let hash = 0;
-            for (let i = 0; i < combined.length; i++) {
-                hash = ((hash << 5) - hash) + combined.charCodeAt(i);
-                hash = hash & hash;
+            for (let ch of seed) {
+                hash = ((hash << 5) - hash) + ch.charCodeAt(0);
+                hash |= 0;
             }
             const compatibility = Math.abs(hash) % 101;
 
-            // Try to get ship image from API
-            let shipImageBuffer = null;
-            try {
-                const encodedAvatar1 = encodeURIComponent(avatar1);
-                const encodedAvatar2 = encodeURIComponent(avatar2);
-                const apiUrl = `https://api.popcat.xyz/ship?user1=${encodedAvatar1}&user2=${encodedAvatar2}`;
-                
-                const response = await axios.get(apiUrl, {
-                    responseType: 'arraybuffer',
-                    timeout: 8000,
-                    headers: {
-                        'User-Agent': 'Discord-Bot'
-                    }
-                });
-                
-                shipImageBuffer = Buffer.from(response.data);
-            } catch (apiError) {
-                console.log(`[PAIR] Ship API failed: ${apiError.message}`);
-            }
-
-            // Create embed
             const embed = new EmbedBuilder()
-                .setTitle(getLang("shipTitle"))
-                .setDescription(getLang("couple", user1.username, user2.username))
+                .setTitle(getLang("pairTitle"))
+                .setDescription(
+                    `${getHeartEmoji(compatibility)} <@${executor.id}> × <@${randomUser.id}> ${getHeartEmoji(compatibility)}\n\n` +
+                    getLoveMessage(compatibility)
+                )
                 .addFields({
-                    name: '📊 ' + getLang("compatibility", compatibility),
-                    value: generateProgressBar(compatibility)
+                    name: `📊 ${getLang("compatibility")}`,
+                    value: `${generateProgressBar(compatibility)} **${compatibility}%**`
                 })
                 .setColor(getColorByCompatibility(compatibility))
-                .setFooter({ text: `${user1.tag} × ${user2.tag}` })
+                .setThumbnail(executor.displayAvatarURL({ extension: 'png' }))
+                .setImage(randomUser.displayAvatarURL({ extension: 'png' }))
+                .setFooter({ text: getLang("footer"), iconURL: guild.iconURL() })
                 .setTimestamp();
 
-            const replyOptions = {
-                content: '',
-                embeds: [embed]
-            };
+            return isSlash
+                ? interaction.reply({ embeds: [embed] })
+                : message.reply({ embeds: [embed] });
 
-            // Add image if available
-            if (shipImageBuffer) {
-                embed.setImage('attachment://ship.png');
-                replyOptions.files = [{
-                    attachment: shipImageBuffer,
-                    name: 'ship.png'
-                }];
-            } else {
-                // Set user avatars as thumbnail and image if API fails
-                embed.setThumbnail(avatar1);
-                embed.setImage(avatar2);
-            }
-
-            if (isSlash) {
-                await interaction.editReply(replyOptions);
-            } else {
-                await sentMessage.edit(replyOptions);
-            }
-
-        } catch (error) {
-            console.error("[PAIR] Command error:", error);
-            const errorMsg = getLang("error");
-            
-            try {
-                if (isSlash) {
-                    if (interaction.replied || interaction.deferred) {
-                        return await interaction.editReply({ content: errorMsg, embeds: [], files: [] });
-                    }
-                    return await interaction.reply({ content: errorMsg, ephemeral: true });
-                } else {
-                    if (sentMessage) {
-                        return await sentMessage.edit({ content: errorMsg, embeds: [], files: [] });
-                    }
-                    return await message.reply(errorMsg);
-                }
-            } catch (replyError) {
-                console.error("[PAIR] Error sending error message:", replyError);
-            }
+        } catch (err) {
+            console.error("PAIR CMD ERR:", err);
+            const errorMsg = "❌ Something went wrong!";
+            return isSlash
+                ? interaction.reply({ content: errorMsg, ephemeral: true })
+                : message.reply(errorMsg);
         }
     }
 };
 
-// Helper function to generate progress bar
 function generateProgressBar(percentage) {
-    const totalBars = 10;
-    const filledBars = Math.round((percentage / 100) * totalBars);
-    const emptyBars = totalBars - filledBars;
-    
-    const filled = '█'.repeat(filledBars);
-    const empty = '░'.repeat(emptyBars);
-    
-    return `${filled}${empty} ${percentage}%`;
+    const total = 15;
+    const filled = Math.round((percentage / 100) * total);
+    return "💖".repeat(filled) + "🤍".repeat(total - filled);
 }
 
-// Helper function to get color based on compatibility
-function getColorByCompatibility(percentage) {
-    if (percentage >= 80) return 0xFF1493; // Deep Pink - High compatibility
-    if (percentage >= 60) return 0xFF69B4; // Hot Pink - Good compatibility
-    if (percentage >= 40) return 0xFFA500; // Orange - Medium compatibility
-    if (percentage >= 20) return 0xFFFF00; // Yellow - Low compatibility
-    return 0x808080; // Gray - Very low compatibility
+function getColorByCompatibility(p) {
+    if (p >= 90) return 0xFF1493;
+    if (p >= 75) return 0xFF69B4;
+    if (p >= 60) return 0xFFB6C1;
+    if (p >= 45) return 0xFFA500;
+    if (p >= 30) return 0xFFD700;
+    return 0x808080;
+}
+
+function getHeartEmoji(p) {
+    if (p >= 90) return '💝';
+    if (p >= 75) return '💖';
+    if (p >= 60) return '💗';
+    if (p >= 45) return '💓';
+    if (p >= 30) return '💕';
+    return '💔';
+}
+
+function getLoveMessage(p) {
+    if (p >= 90) return "🌟 **Perfect Match!** Soulmates detected! ✨";
+    if (p >= 75) return "✨ **Amazing Connection!** This could be real! 🌹";
+    if (p >= 60) return "🌸 **Great Chemistry!** There’s a spark! 💫";
+    if (p >= 45) return "🌼 **Good Potential!** Worth a try! 🎯";
+    if (p >= 30) return "🍀 **Could Work!** Anything is possible! 💪";
+    return "💭 **Just Friends** — but friendship is beautiful too! 🤝";
 }
