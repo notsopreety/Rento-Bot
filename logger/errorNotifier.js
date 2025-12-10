@@ -26,35 +26,8 @@ class ErrorNotifier {
 
     shouldNotify(errorSignature) {
         if (!this.isEnabled()) return false;
-
-        const now = Date.now();
-        const errorData = this.recentErrors.get(errorSignature);
-
-        if (!errorData) {
-            this.recentErrors.set(errorSignature, {
-                count: 1,
-                firstOccurrence: now,
-                lastOccurrence: now
-            });
-            return true;
-        }
-
-        if (now - errorData.firstOccurrence > this.rateLimitWindow) {
-            this.recentErrors.set(errorSignature, {
-                count: 1,
-                firstOccurrence: now,
-                lastOccurrence: now
-            });
-            return true;
-        }
-
-        errorData.count++;
-        errorData.lastOccurrence = now;
-
-        if (errorData.count > this.maxSameErrorsPerWindow) {
-            return false;
-        }
-
+        
+        // Send every error - no rate limiting
         return true;
     }
 
